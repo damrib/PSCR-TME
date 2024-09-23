@@ -1,3 +1,4 @@
+#include "List.h" // Faute: "List.h" n'était pas inclu dans le fichier
 
 namespace pr {
 
@@ -9,15 +10,16 @@ size_t Chainon::length() {
 	if (next != nullptr) {
 		len += next->length();
 	}
-	return length();
+	return len; // Faute: on appelait Length (boucle infini) plutot que de donner le res
 }
 
-void Chainon::print (std::ostream & os) {
+void Chainon::print (std::ostream & os) const { // Faute: il manquait un const
 	os << data ;
 	if (next != nullptr) {
 		os << ", ";
+		next->print(os);
 	}
-	next->print(os);
+	// next->print(os) Faute on appelle une methode sur nullptr
 }
 
 // ******************  List
@@ -45,7 +47,7 @@ void List::push_front (const std::string& val) {
 	tete = new Chainon(val,tete);
 }
 
-bool empty() {
+bool List::empty() { // Faute definition d'une foncion empty plutot que de la methode empty
 	return tete == nullptr;
 }
 

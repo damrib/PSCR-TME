@@ -35,9 +35,7 @@ public:
 
 	void push_back (const std::string& val) ;
 
-	void push_front (const std::string& val) {
-		tete = new Chainon(val,tete);
-	}
+	void push_front (const std::string& val); // Faute definition de la fonction dans le .h et .cpp
 
 	bool empty() ;
 
@@ -45,8 +43,8 @@ public:
 };
 
 
-std::ostream & operator<< (std::ostream & os, const List & vec) ;
-
 } /* namespace pr */
+
+std::ostream & operator<< (std::ostream & os, const pr::List & vec) ;// Faute l'operateur etait declare dans le namespace
 
 #endif /* SRC_LIST_H_ */
