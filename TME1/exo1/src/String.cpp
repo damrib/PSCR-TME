@@ -17,6 +17,18 @@ namespace sbibl{
         return str - len;
     }
 
+    int compare(const String& s1, const String& s2) {
+    const char *str1 = s1.get_string();
+    const char *str2 = s2.get_string();
+
+    do {
+        if ( *str1 < *str2 ) return -1;
+        else if (*str1 > *str2) return 1; 
+    } while(*++str1 && *++str2);
+
+    return 0;
+    }
+
 }
 
 String::String(const char* s) {
@@ -54,24 +66,12 @@ size_t String::length() const {
     return sbibl::length(this->str);
 }
 
-int compare(const String& s1, const String& s2) {
-    const char *str1 = s1.get_string();
-    const char *str2 = s2.get_string();
-
-    do {
-        if ( *str1 < *str2 ) return -1;
-        else if (*str1 > *str2) return 1; 
-    } while(*++str1 && *++str2);
-
-    return 0;
-}
-
 bool operator==(const String& s1, const String& s2) {
-    return compare(s1, s2) == 0;
+    return sbibl::compare(s1, s2) == 0;
 }
 
 bool String::operator<(const String& s) const {
-    return compare(*this, s) < 0;
+    return sbibl::compare(*this, s) < 0;
 }
 
 std::ostream & operator<<(std::ostream& os, const String& s) {

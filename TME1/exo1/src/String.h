@@ -28,11 +28,10 @@ class String {
 
 std::ostream & operator<<(std::ostream& os, const String& s);
 
-int compare(const String& s1, const String& s2);
-
 bool operator==(const String& s1, const String& s2);
 
 namespace sbibl{
     std::size_t length(const char*);
     char * newcopy(const char* s);
+    int compare(const String& s1, const String& s2);
 }

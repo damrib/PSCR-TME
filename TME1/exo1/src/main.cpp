@@ -48,13 +48,13 @@ int main () {
 	s.modify_c('z');
 	std::cout << "\n" << test << " " << s << std::endl;
 
-	std::cout << compare(String("abc"), String("abc")) << std::endl;
+	std::cout << sbibl::compare(String("abc"), String("abc")) << std::endl;
 	std::cout << (String("abc") == String("abc")) << std::endl;
 	std::cout << (String("abc") < String("abc")) << std::endl;
-	std::cout << compare(String("abc"), String("bbc")) << std::endl;
+	std::cout << sbibl::compare(String("abc"), String("bbc")) << std::endl;
 	std::cout << (String("abc") == String("bbc")) << std::endl;
 	std::cout << (String("abc") < String("bbc")) << std::endl;
-	std::cout << compare(String("abd"), String("abc")) << std::endl;
+	std::cout << sbibl::compare(String("abd"), String("abc")) << std::endl;
 	std::cout << (String("abd") == String("abc")) << std::endl;
 	std::cout << (String("abd") < String("abc")) << std::endl;
 
