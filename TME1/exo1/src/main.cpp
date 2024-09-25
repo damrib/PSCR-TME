@@ -10,10 +10,11 @@
 int main () {
 
 	std::string abc = "abc";
-	char * str = new char [3];
+	char * str = new char [4]; // Faute: Il faut que le dernier caractere soit le caractere 0
 	str[0] = 'a';
 	str[1] = 'b';
 	str[2] = 'c';
+	str[3] = '\0';
 	int i = 0; // Faute size_t ne peut pas etre neg
 
 	if (! strcmp (str, abc.c_str())) {
@@ -40,7 +41,6 @@ int main () {
 	delete[] str; 
     // Le destructeur est automatique detruit par le destructeur ~List
 
-	std::cout << sbibl::length("abc") << " " << sbibl::newcopy("abc");
 	String s("abc");
     std::cout << '\n' << s;
     const char * const test = s.get_string();
