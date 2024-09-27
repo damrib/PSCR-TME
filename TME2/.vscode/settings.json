@@ -1,0 +1,19 @@
+{
+    "files.associations": {
+        "forward_list": "cpp",
+        "iterator": "cpp",
+        "memory": "cpp",
+        "regex": "cpp",
+        "vector": "cpp",
+        "xmemory": "cpp",
+        "xstring": "cpp",
+        "xutility": "cpp",
+        "algorithm": "cpp",
+        "chrono": "cpp",
+        "optional": "cpp",
+        "system_error": "cpp",
+        "type_traits": "cpp",
+        "xtr1common": "cpp",
+        "xlocmon": "cpp"
+    }
+}

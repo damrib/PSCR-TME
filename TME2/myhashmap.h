@@ -1,5 +1,6 @@
 #include <vector>
-#include <forward_list>
+
+#include "myList.h"
 
 template<typename K, typename V>
 class myhashmap {
@@ -11,7 +12,7 @@ class myhashmap {
         Entry(const K key, V val) : Key(key), value(val) {}
     };
 
-    typedef std::vector<std::forward_list<Entry>> bucket_t;
+    typedef std::vector<myList<Entry>> bucket_t;
 
     bucket_t bucket;
 
@@ -30,7 +31,7 @@ class myhashmap {
         std::size_t hash_key = hash(key) % bucket.size();
         for (auto& node : bucket[hash_key]) {
             if ( node.Key == key ){
-                return &node.value;
+                return &(node.value);
             }
         }
 
