@@ -19,13 +19,13 @@ class myList {
         using pointer           = V*;
         using reference         = V&;
 
-        Iterator(Node* ptr) : m_ptr(ptr) {}
+        Iterator(Node* ptr) : ptr(ptr) {}
 
-        reference operator*() const { return m_ptr->value; }
-        pointer operator->() { return &(m_ptr->value); }
+        reference operator*() const { return ptr->value; }
+        pointer operator->() { return &(ptr->value); }
 
         Iterator& operator++() { 
-            m_ptr = m_ptr->next; 
+            ptr = ptr->next; 
             return *this; 
         }
 
@@ -36,16 +36,16 @@ class myList {
         }
 
         friend bool operator==(const Iterator& a, const Iterator& b) {
-            return a.m_ptr == b.m_ptr;
+            return a.ptr == b.ptr;
         }
 
         friend bool operator!=(const Iterator& a, const Iterator& b) {
-            return a.m_ptr != b.m_ptr;
+            return a.ptr != b.ptr;
         }
 
         private:
 
-            Node* m_ptr;
+            Node* ptr;
 
     };
 

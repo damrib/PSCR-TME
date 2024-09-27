@@ -1,5 +1,4 @@
-#include <vector>
-
+#include "myVector.h"
 #include "myList.h"
 
 template<typename K, typename V>
@@ -12,7 +11,7 @@ class myhashmap {
         Entry(const K key, V val) : Key(key), value(val) {}
     };
 
-    typedef std::vector<myList<Entry>> bucket_t;
+    typedef myVector<myList<Entry>> bucket_t;
 
     bucket_t bucket;
 
@@ -22,7 +21,7 @@ class myhashmap {
 
     public:
 
-    myhashmap(int sz) {
+    myhashmap(const std::size_t sz) {
         bucket = bucket_t(sz); // constructeur de vecteur avec taille n, n element init par defaut
     }
 
@@ -66,8 +65,8 @@ class myhashmap {
 
     std::size_t size() const{
         std::size_t sz = 0;
-        for (int i = 0; i < bucket.size(); ++i){
-            for (const auto& node : bucket[i]) {
+        for (const auto& list : bucket){
+            for (const auto& node : list) {
                 ++sz;
             }
         }
