@@ -13,13 +13,15 @@ class myVector{
         using pointer           = V*;
         using reference         = V&;
 
+        Iterator() : ptr(nullptr) {}
+
         Iterator(pointer ptr) : ptr(ptr) {}
 
         const reference operator*() const { return *ptr; }
         const pointer operator->() { return ptr; }
 
-        Iterator& operator++() const { ++ptr; return *this; }
-        Iterator operator++() { 
+        Iterator& operator++() { ++ptr; return *this; }
+        Iterator operator++(int) { 
             Iterator tmp = *this; 
             ++ptr; 
             return tmp;

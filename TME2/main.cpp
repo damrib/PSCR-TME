@@ -4,6 +4,8 @@
 #include <chrono>
 #include <vector>
 #include "myhashmap.h"
+#include "TME3.h"
+
 
 void add_different(std::vector<std::string>& Dict, std::string word){
 	for (int i = 0; i < Dict.size(); ++i) {
@@ -46,9 +48,9 @@ int main () {
 	// une regex qui reconnait les caractères anormaux (négation des lettres)
 	std::regex re( R"([^a-zA-Z])");
 
-	//vector<string> dictionnary = vector<string>(0);
-	//vector<pair<string, int>> occurences = vector<pair<string, int>>(0);
-	myhashmap<std::string, int> map(1000);
+	//std::vector<std::string> dictionnary = std::vector<std::string>(0);
+	std::vector<std::pair<std::string, int>> occurences = std::vector<std::pair<std::string, int>>(0);
+	myhashmap<std::string, int> map(10000);
 	std::vector<std::pair<std::string, int>> map_data;
 	while (input >> word) {
 		// élimine la ponctuation et les caractères spéciaux
@@ -62,7 +64,7 @@ int main () {
 			std::cout << nombre_lu << ": "<< word << std::endl;
 		nombre_lu++;
 		//add_different(dictionnary, word);
-		//add_occurence(occurences, word);
+		add_occurence(occurences, word);
 		map.incr(word);
 	}
 	input.close();
@@ -83,13 +85,13 @@ int main () {
 		if (p.first == "war" || p.first == "peace" || p.first == "toto")
 			cout << "nb occ of " << p.first << " " << p.second << endl;
 	}**/
-	std::cout << "Found " << map.size() << " different words" << std::endl;
+	std::cout << "Found " << map.size() << " different words " << Iterator_utilities_TME::count(map.begin(), map.end()) << std::endl;
 	std::cout << "nb occ of war " << *map.get(std::string("war")) << std::endl;
 	std::cout << "nb occ of peace " << *map.get(std::string("peace")) << std::endl;
 
 	std::cout << "most frequent words " << std::endl;
 	for (int i = 0; i < 10; ++i) {
-		std::cout << map_data[i].first <<": " << map_data[i].second << " times" << std::endl; 
+		std::cout << map_data[i].first <<": " << map_data[i].second << " times " /**<< Iterator_utilities_TME::count_if_equal(occurences.begin(), occurences.end(), map_data[i])**/ << std::endl; 
 	}
 
     return 0;

@@ -5,7 +5,11 @@ class myList {
         Node* next;
         V value;
 
-        Node(Node* next, V value) : next(next), value(value) {}
+        /**Node(Node* next, V value) : next(next), value(value) {
+            std::cout << "copied" << std::endl;
+        }**/
+
+        Node(Node* next, V&& v) noexcept : next(next), value(v) {}
     };
 
     Node* head = nullptr;
@@ -18,6 +22,8 @@ class myList {
         using value_type        = V;
         using pointer           = V*;
         using reference         = V&;
+
+        Iterator () : ptr(nullptr) {}
 
         Iterator(Node* ptr) : ptr(ptr) {}
 
@@ -49,9 +55,12 @@ class myList {
 
     };
 
-    void push_front(const V& val) {
-        Node* new_node = new Node(head, val);
-        head = new_node;
+    /**void push_front(const V& val) {
+        head = new Node(head, val);
+    }**/
+
+    void push_front(V&& val) noexcept {
+        head = new Node(head, std::move(val));
     }
 
     ~myList(){
