@@ -82,6 +82,9 @@ class myVector{
         return sz;
     }
 
+    size_t get_capacity() const {
+        return capacity;
+    }
 
     Iterator begin()  const { return Iterator(&array[0]);  }
     Iterator cbegin() const { return Iterator(&array[0]);  }

@@ -5,11 +5,8 @@ class myList {
         Node* next;
         V value;
 
-        /**Node(Node* next, V value) : next(next), value(value) {
-            std::cout << "copied" << std::endl;
-        }**/
+        Node(Node* nx, V&& v) noexcept : next(nx), value(v) {}
 
-        Node(Node* next, V&& v) noexcept : next(next), value(v) {}
     };
 
     Node* head = nullptr;
@@ -63,8 +60,30 @@ class myList {
         head = new Node(head, std::move(val));
     }
 
+   myList() {
+        head = nullptr;
+   }
+
+   myList(const myList& list) {
+       for (auto& node: list) {
+           push_front(std::move(node));
+       }
+   }
+
+   myList& operator=(const myList& list) {
+        while(! empty()){
+            Node* tmp = head;
+            head = head->next;
+            delete tmp;
+        }
+        for (auto& node: list) {
+           push_front(std::move(node));
+        }
+        return *this;
+   }
+
     ~myList(){
-        while (head){
+        while (! empty()){
             Node* tmp = head;
             head = head->next;
             delete tmp;
@@ -79,6 +98,10 @@ class myList {
 
         delete tmp;
         return res; 
+    }
+
+    bool empty() const {
+        return head == nullptr;
     }
 
     Iterator begin() const { return Iterator(head); }

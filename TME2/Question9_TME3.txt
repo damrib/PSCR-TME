@@ -1,0 +1,9 @@
+Si l'on dispose de la structure Personne de l'énoncé ainsi que d'un vecteur de Personne, 
+on peut regrouper de maniere efficace les personnes qui font parti d'un meme sous-groupe en 
+créant une table de hashage dont les clés correspondent à l'attribut qui permet de distinguer les sous-groupe,
+tandis que les valeurs associées au clés sont des liste-chainés (forward_list) de Personne.
+Si l'utilisateur compte preserver le vecteur de Personne même après la création des tables de hâchage,
+il est aussi important de faire en sorte que les forward_list pointent vers les mêmes structures Personne stockées
+dans le vecteur. En effet, les structures Personne sont déjà stockées dans le tas (puisque l'on utilise un vecteur),
+il n'est dont pas necessaire de faire de nouvelle copie dans le tas pour ces mêmes structures. Cela permet aussi à l'utilisateur
+de modifier les données de la base de données directement en utilisant l'une des tables de hachage.

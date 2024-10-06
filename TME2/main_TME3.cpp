@@ -3,35 +3,9 @@
 #include <regex>
 #include <chrono>
 #include <vector>
-#include "myhashmap.h"
+#include <unordered_map>
+#include <forward_list>
 #include "TME3.h"
-
-
-void add_different(std::vector<std::string>& Dict, std::string word){
-	for (int i = 0; i < Dict.size(); ++i) {
-		if (Dict[i] == word) return;
-	}
-	Dict.push_back(word);
-}
-
-void add_occurence(std::vector<std::pair<std::string, int>>& occ, std::string word){
-	for (int i = 0; i < occ.size(); ++i) {
-		if (occ[i].first == word) {
-			occ[i].second += 1;
-			return;
-		}
-	}
-	occ.push_back(std::pair<std::string, int>(word, 1));
-}
-
-int find_nb_occ(const std::vector<std::pair<std::string, int>>& occ, std::string word){
-	for (int i = 0; i < occ.size(); ++i) {
-		if (occ[i].first == word){
-			return occ[i].second;
-		}
-	}
-	return 0;
-}
 
 int main () {
 	//sing namespace std;
@@ -48,10 +22,8 @@ int main () {
 	// une regex qui reconnait les caractères anormaux (négation des lettres)
 	std::regex re( R"([^a-zA-Z])");
 
-	//std::vector<std::string> dictionnary = std::vector<std::string>(0);
-	//std::vector<std::pair<std::string, int>> occurences = std::vector<std::pair<std::string, int>>(0);
-	myhashmap<std::string, int> map(1024);
-	std::vector<std::pair<std::string, int>> map_data;
+	std::unordered_map<std::string, int> map(1024);
+	std::unordered_map<int, std::forward_list<std::string>> freq_word_map(1024);
 	while (input >> word) {
 		// élimine la ponctuation et les caractères spéciaux
 		word =regex_replace ( word, re, "");
@@ -63,16 +35,32 @@ int main () {
 			// on affiche un mot "propre" sur 100
 			std::cout << nombre_lu << ": "<< word << std::endl;
 		nombre_lu++;
-		//add_different(dictionnary, word);
-		//add_occurence(occurences, word);
-		map.incr(word);
+
+		auto it = map.find(word);
+		if ( it == map.end() ){
+			map.emplace(word, 1);
+		} else {
+			(*it).second = (*it).second + 1;
+		}
 	}
 	input.close();
+	std::cout << "Finished Parsing War and Peace" << std::endl;
 
-	map_data = map.extract();
+	std::vector<std::pair<std::string, int>> map_data(map.size());
+	for (const auto& node : map) {
+		map_data.emplace_back(node);
+		freq_word_map[node.second].push_front(node.first);
+	}
 	std::sort(map_data.begin(), map_data.end(), [](const std::pair<std::string, int>& e1, const std::pair<std::string, int>& e2) {return e1.second > e2.second; });
 
-	std::cout << "Finished Parsing War and Peace" << std::endl;
+	for (int i = 100; i < 110; ++i) {
+		std::cout << "affichage des mots qui ont " << i << " occurences: " << std::flush;
+		if ( freq_word_map.find(i) != freq_word_map.end() )
+			for (const auto& node: freq_word_map[i] ) {
+				std::cout << node << " " << std::flush; 
+			}
+		std::cout << std::endl;
+	}
 
 	auto end = steady_clock::now();
     std::cout << "Parsing took "
@@ -80,14 +68,10 @@ int main () {
               << "ms.\n";
 
     std::cout << "Found a total of " << nombre_lu << " words." << std::endl;
-	//cout << "Found " << dictionnary.size() << " different words" << endl;
-	/**for (pair p : occurences) {
-		if (p.first == "war" || p.first == "peace" || p.first == "toto")
-			cout << "nb occ of " << p.first << " " << p.second << endl;
-	}**/
+
 	std::cout << "Found " << map.size() << " different words " << Iterator_utilities_TME::count(map.begin(), map.end()) << std::endl;
-	std::cout << "nb occ of war " << *map.get(std::string("war")) << std::endl;
-	std::cout << "nb occ of peace " << *map.get(std::string("peace")) << std::endl;
+	std::cout << "nb occ of war " << (*map.find(std::string("war"))).second << std::endl;
+	std::cout << "nb occ of peace " << (*map.find(std::string("peace"))).second << std::endl;
 
 	std::cout << "most frequent words " << std::endl;
 	for (int i = 0; i < 10; ++i) {
@@ -96,5 +80,4 @@ int main () {
 
     return 0;
 }
-
 

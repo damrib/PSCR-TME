@@ -5,6 +5,8 @@
 template<typename K, typename V>
 class myhashmap {
 
+
+    // definition de sous-classe et de type interne a la classe
     struct Entry {
         const K Key;
         V value;
@@ -16,15 +18,30 @@ class myhashmap {
     typedef typename bucket_t::Iterator Vector_Iterator;
     typedef typename myList<Entry>::Iterator List_Iterator;
 
-
+    // declaration des champs de la classe
     bucket_t bucket;
+    size_t sz;
 
+    // méthode privé
     size_t hash(const K& Key) {
         return std::hash<K>()(Key);
     }
 
+    void grow(const size_t new_capacity) {
+        bucket_t new_bucket(new_capacity);
+        for (auto& list : bucket) {
+            while ( ! list.empty() ) {
+                Entry E = list.Pop();
+                size_t new_hash_key = hash(E.Key) % new_capacity;
+                new_bucket[new_hash_key].push_front(std::move(E));
+            }
+        } 
+        bucket = new_bucket;
+    }
+
     public:
 
+    // definition de l'iterateur de la classe
     class Iterator{
         using iterator_category = std::forward_iterator_tag;
         using difference_type = std::ptrdiff_t;
@@ -81,11 +98,18 @@ class myhashmap {
         }
 
     };
+    // methode pour obtenir des iterateurs
+    Iterator begin() const { return Iterator(bucket.begin(), bucket.end()); }
+    Iterator end() const { return Iterator(bucket.end(), bucket.end()); }
 
-    myhashmap(const std::size_t sz) {
-        bucket = bucket_t(sz);
+    // definition de Constructeur et d'operateur d'affectation
+    myhashmap(const std::size_t s) {
+        bucket = bucket_t(s);
+        sz = 0;
+        std::cout << capacity() << std::endl;
     }
 
+    // methodes publiques
     const V* get(const K& key) {
 
         std::size_t hash_key = hash(key) % bucket.size();
@@ -108,6 +132,7 @@ class myhashmap {
         }
         
         bucket[hash_key].push_front(std::move(Entry(key, value)));
+        if (++sz >= capacity() * 10) grow(capacity() * 4);
         return false;
     }
 
@@ -120,20 +145,17 @@ class myhashmap {
             }
         }
         bucket[hash_key].push_front(std::move(Entry(key, 1)));
+        if (++sz >= capacity() * 10) grow(capacity() * 4);
         return false;
     }
 
     std::size_t size() const{
-        std::size_t sz = 0;
-        for (const auto& list : bucket){
-            for (const auto& node : list) {
-                ++sz;
-            }
-        }
         return sz;
     }
 
-    
+    std::size_t capacity() const {
+        return bucket.get_capacity();
+    }
 
     std::vector<std::pair<K, V>> extract() const {
         std::vector<std::pair<K, V>> res;
@@ -143,8 +165,5 @@ class myhashmap {
         }
         return res;
     }
-
-    Iterator begin() const { return Iterator(bucket.begin(), bucket.end()); }
-    Iterator end() const { return Iterator(bucket.end(), bucket.end()); }
 
 };
