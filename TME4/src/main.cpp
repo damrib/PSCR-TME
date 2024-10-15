@@ -2,12 +2,20 @@
 #include <cstdlib>
 #include <iostream>
 #include <chrono>
+#include <random>
+
+int threadRandom(int min, int max) { // max inclusif
+	static thread_local std::random_device rd;  // a seed source for the random number engine
+	static thread_local std::mt19937 gem(rd());
+	std::uniform_int_distribution<int> d(min, max);
+	return d(gem);
+}
 
 void random_transac_then_sleep(pr::Banque& b) {
-	size_t id_account1 = std::rand() % b.size();
+	size_t id_account1 = threadRandom(0, b.size()-1);
 	size_t id_account2;
 	do {
-		id_account2 = std::rand() % b.size();
+		id_account2 = threadRandom(0, b.size()-1);
 	} while (id_account1 == id_account2);
 	unsigned int v = std::rand() % 100;
 	for (int i = 0 ; i < 1000; ++i){
@@ -26,11 +34,6 @@ void thread_comptabilisation(pr::Banque& b, int expected, bool* res) {
 
 }
 
-/**int threadRandom(int min, int max) { // max inclusif
-	static thread_local std::mt19934 gem;
-	std::uniform_int_distribution<int> d(min, max);
-	return d(gem);
-}**/
 
 const int NB_THREAD = 10;
 int main () {
@@ -40,7 +43,7 @@ int main () {
 	// TODO : creer des threads qui font ce qui est demandé
 	threads.reserve(NB_THREAD);
 
-	size_t nb_account = NB_THREAD / 4;
+	size_t nb_account = NB_THREAD / 2;
 	pr::Banque b(nb_account, 100);
 
 	for ( int i = 0; i < NB_THREAD; ++i) {
