@@ -14,6 +14,14 @@ void FatherWins(int sig){
   exit(0);
 }
 
+void setHandler_for(int sig, sighandler_t f) {
+  struct sigaction act;
+  sigfillset(&act.sa_mask);
+  act.sa_flags = 0;
+  act.sa_handler = f;
+  sigaction(sig, &act, NULL);
+}
+
 void handler(int sig) {
   std::cout << name << ":" << proc_hp << std::endl;
 	if ( --proc_hp == 0 ){
@@ -24,37 +32,37 @@ void handler(int sig) {
     }
     exit(1);
 	}
-  signal(SIGINT, &handler);
+  setHandler_for(SIGINT, &handler);
 }
 
 void pary(int sig) {
   std::cout << "coup paré " << std::endl;
+  setHandler_for(SIGINT, &pary);
 }
 
 void attaque(pid_t adversaire) {
-  /**struct sigaction act;
-  sigfillset(&act.sa_mask);
-  act.sa_flags = 0;
-  act.sa_handler = &handler;
-  sigaction(SIGINT, &act, NULL);**/
-  signal(SIGINT, &handler);
+  setHandler_for(SIGINT, &handler);
   kill(adversaire, SIGINT);
+  std::cout << name << "" << 2 << std::endl;
   randsleep();
 }
 
 void defense() {
-  signal(SIGINT, SIG_IGN);
-  /**if (name == "Vader") signal(SIGINT, SIG_IGN);
-  else {
-    signal(SIGINT, &pary);
+  if ( name == "Vader") {
+    setHandler_for(SIGINT, &pary);
     sigset_t setPos;
+
     sigemptyset(&setPos);
     sigaddset(&setPos, SIGINT);
     sigprocmask(SIG_BLOCK, &setPos, NULL);
     randsleep();
+    sigfillset(&setPos);
+    sigdelset(&setPos, SIGINT);
     sigsuspend(&setPos);
-  }**/
-  randsleep();
+  } else {
+    setHandler_for(SIGINT, SIG_IGN);
+    randsleep();
+  }
 }
 
 void combat(pid_t adversaire) {
@@ -70,7 +78,7 @@ void randsleep() {
   int r = rand();
   double ratio = (double)r / (double) RAND_MAX;
   struct timespec tosleep;
-  tosleep.tv_sec =0;
+  tosleep.tv_sec = 0;
   // 300 millions de ns = 0.3 secondes
   tosleep.tv_nsec = 300000000 + ratio*700000000;
   struct timespec remain;
@@ -85,7 +93,6 @@ int main() {
   if (pid == 0) {
     srand(time(NULL));
     name = "Luke";
-    proc_hp = 1;
     combat(getppid());
   } else {
     srand(time(NULL));
