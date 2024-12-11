@@ -2,13 +2,15 @@
 #include <iostream>
 #include <unistd.h>
 
+#include <thread>
+
 
 class IncrementServer : public pr::ConnectionHandler {
 
 public :
-	void handleConnection (pr::Socket sc) {
+	void handleConnection (pr::Socket& sc) {
 		int fd = sc.getFD();
-
+		
 		ssize_t msz = sizeof(int);
 		while (1) {
 			int lu;
@@ -32,7 +34,9 @@ public :
 			}
 			std::cout << "envoyé =" << lu << std::endl;
 		}
+		sc.close();
 	}
+	
 	ConnectionHandler * clone() const {
 		return new IncrementServer();
 	}

@@ -1,4 +1,5 @@
 #include "ServerSocket.h"
+#include "Socket.h"
 #include <iostream>
 #include <unistd.h>
 #include <string>
@@ -74,6 +75,8 @@ int main() {
 			std::cout << "lu =" << lu << std::endl;
 		}
 	}
+
+	sock.close();
 
 	return 0;
 }
