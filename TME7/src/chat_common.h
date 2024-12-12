@@ -37,6 +37,7 @@ struct myshm {
   int write; /* nombre de messages non encore retransmis par le serveur */
   int nb; /* nombre total de messages emis */
   sem_t sem;
+  sem_t isFull;
   struct message messages[MAX_MESS];
 };
 
